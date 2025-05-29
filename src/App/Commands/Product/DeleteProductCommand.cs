@@ -3,4 +3,4 @@ using System;
 
 namespace App.Commands.Product;
 
-public record DeleteProductCommand(Guid Id) : IRequest;
+public record DeleteProductCommand(Guid Id) : IRequest<bool>;

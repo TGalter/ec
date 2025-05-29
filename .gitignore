@@ -72,12 +72,6 @@ publish/
 *.publishproj
 *.pubxml
 
-# Local settings
-appsettings.Development.json
-appsettings.Production.json # Se você tiver segredos aqui, considere User Secrets ou Azure Key Vault
-appsettings.Staging.json
-appsettings.json.user
-
 # Any other files that should be ignored
 *.userprefs
 *.pid
@@ -94,4 +88,4 @@ EOF
 echo "Arquivo '.gitignore' criado com sucesso na raiz do projeto."
 echo "Lembre-se de verificar e ajustar o conteúdo do .gitignore conforme suas necessidades específicas."
 
-*.sh
+[0-9].sh

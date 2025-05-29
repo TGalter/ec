@@ -1,4 +1,5 @@
 using App;
+using App.Interfaces;
 using Dom.Interfaces;
 using Infra;
 using Infra.Context;
@@ -21,6 +22,9 @@ builder.Services.AddAutoMapper(App.Behaviors.AssemblyReference.Assembly);
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+builder.Services.Configure<ElasticSearchSettings>(builder.Configuration.GetSection("ElasticSearch"));
+builder.Services.AddScoped<IElasticSearchService, ElasticSearchService>();
+
 
 builder.Services.AddControllers();
 
@@ -38,11 +42,11 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
