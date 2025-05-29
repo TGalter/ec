@@ -115,7 +115,6 @@ Para rodar o projeto, você precisará dos seguintes softwares instalados em sua
         ```
         Este script irá:
         * Levantar todos os serviços definidos no `docker-compose.yml` em segundo plano.
-        * Aguardar que o PostgreSQL esteja totalmente pronto para conexões.
         * **Executar as migrações do Entity Framework Core localmente**, garantindo que o banco de dados esteja com o esquema atualizado.
         * Aguardar que o Kafka Connect esteja totalmente pronto.
         * Configurar os conectores Debezium (PostgreSQL CDC) e Elasticsearch Sink no Kafka Connect.
