@@ -1,3 +1,6 @@
+using App.DTOs;
+using App.Interfaces;
+using AutoMapper;
 using Dom.Entities;
 using Dom.Interfaces;
 using MediatR;
@@ -7,18 +10,22 @@ using System.Threading.Tasks;
 
 namespace App.Queries.Product
 {
-    public class GetAllProductsHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<Dom.Entities.Product>>
+    public class GetAllProductsHandler : IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
     {
-        private readonly IProductRepository _repository;
+        private readonly IElasticSearchService _elasticSearchService;
+        private readonly IMapper _mapper;
 
-        public GetAllProductsHandler(IProductRepository repository)
+        public GetAllProductsHandler(IElasticSearchService elasticSearchService, IMapper mapper)
         {
-            _repository = repository;
+            _elasticSearchService = elasticSearchService;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Dom.Entities.Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _repository.GetAllAsync();
+            var response = await _elasticSearchService.GetAllProductsAsync();
+
+            return _mapper.Map<IEnumerable<ProductDto>>(response);
         }
     }
 }

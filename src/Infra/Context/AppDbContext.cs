@@ -21,6 +21,9 @@ public class AppDbContext : DbContext
             entity.ToTable("products");
 
             entity.HasKey(e => e.Id);
+            
+            entity.Property(p => p.Id)
+                  .ValueGeneratedOnAdd();
 
             entity.Property(e => e.Id)
                 .HasColumnName("id");
