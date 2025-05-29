@@ -91,14 +91,6 @@ Para rodar o projeto, você precisará dos seguintes softwares instalados em sua
     * **Git Bash:** Baixe e instale o Git for Windows, que inclui o Git Bash: [https://git-scm.com/download/win](https://git-scm.com/download/win)
     * **WSL:** Como alternativa, você pode configurar o WSL (Windows Subsystem for Linux) se preferir um ambiente Linux completo dentro do Windows.
 
-5.  **`netcat` (nc):**
-    * Usado pelo script `start.sh` para verificar a prontidão da porta do PostgreSQL.
-    * No Linux/WSL (distros baseadas em Debian/Ubuntu):
-        ```bash
-        sudo apt update && sudo apt install -y netcat-openbsd
-        ```
-    * No Git Bash no Windows, o `nc` geralmente já vem pré-instalado.
-
 ---
 
 ## 🚀 Primeiros Passos

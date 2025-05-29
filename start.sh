@@ -44,28 +44,6 @@ fi
 
 # --- Funções Auxiliares ---
 
-# Função para aguardar o PostgreSQL estar ativo
-wait_for_postgres() {
-  echo "Aguardando o PostgreSQL em ${DB_HOST}:${DB_PORT}..."
-  # Usamos 'nc' (netcat) para verificar se a porta está aberta.
-  # Em alguns sistemas, 'nc -z' pode não estar disponível, então usamos 'nc -zv'.
-  # Se o 'nc' não for universal, 'sleep' ou 'pg_isready' (se instalado localmente) seriam alternativas.
-  # Como estamos em Bash (Git Bash/WSL), 'nc' é geralmente presente ou fácil de instalar.
-  for i in $(seq 1 $MAX_RETRIES); do
-    if nc -z "$DB_HOST" "$DB_PORT" &>/dev/null; then
-      echo "PostgreSQL está ativo e a porta ${DB_PORT} está aberta."
-      return 0
-    else
-      echo "Tentativa $i de $MAX_RETRIES: PostgreSQL não está pronto. Aguardando ${RETRY_DELAY}s..."
-      sleep $RETRY_DELAY
-    fi
-  done
-
-  echo "Erro: PostgreSQL não ficou ativo após $MAX_RETRIES tentativas. Encerrando."
-  exit 1
-}
-
-
 # Função para aguardar o serviço Kafka Connect estar ativo
 wait_for_kafka_connect() {
   echo "Aguardando o Kafka Connect estar ativo em ${CONNECTORS_API_URL}..."
