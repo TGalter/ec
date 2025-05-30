@@ -1,5 +1,6 @@
 using App.Commands;
 using App.Commands.Product;
+using App.DTOs;
 using App.Queries.Product;
 using Dom.Entities;
 using MediatR;
@@ -22,19 +23,37 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
         {
             var products = await _mediator.Send(new GetAllProductsQuery());
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetById(Guid id)
+        public async Task<ActionResult<ProductDto>> GetById(Guid id)
         {
             var product = await _mediator.Send(new GetProductByIdQuery(id));
             if (product == null)
                 return NotFound();
             return Ok(product);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<SearchResult<ProductDto>>> Search(
+            [FromQuery] string query,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("O termo de pesquisa não pode ser vazio.");
+
+            var productsQuery = new SearchProductsQuery(query, page, pageSize);
+            var result = await _mediator.Send(productsQuery);
+
+            if (result == null || result.Items.Count == 0)
+                return NotFound("Nenhum produto encontrado com o termo de pesquisa fornecido.");
+
+            return Ok(result);
         }
 
         [HttpPost]

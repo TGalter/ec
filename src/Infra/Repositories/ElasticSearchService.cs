@@ -43,4 +43,41 @@ public class ElasticSearchService : IElasticSearchService
 
         throw new KeyNotFoundException($"Product with ID {id} not found.");
     }
+
+    public async Task<SearchResult<Product>> SearchProductsAsync(string searchTerm, int page = 1, int pageSize = 10)
+    {
+        if (page <= 0) page = 1;
+        if (pageSize <= 0) pageSize = 10;
+
+        var response = await _client.SearchAsync<Product>(s => s
+            .Index(_index)
+            .Query(q => q
+                .MultiMatch(mm => mm
+                    .Query(searchTerm)
+                    .Fields(f => f
+                        .Field(p => p.Name, boost: 2.0)
+                        .Field(p => p.Description)
+                    )
+                    .Type(TextQueryType.BestFields)
+                    .Fuzziness(Fuzziness.Auto) // tolera erros de digitação
+                )
+            )
+            .From((page - 1) * pageSize)
+            .Size(pageSize)
+        );
+
+        if (!response.IsValid)
+        {
+            Console.WriteLine($"Erro na busca: {response.DebugInformation}");
+            throw new Exception("Erro na busca no Elasticsearch");
+        }
+
+        return new SearchResult<Product>
+        {
+            Items = response.Documents,
+            Total = response.Total,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
 }

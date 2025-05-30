@@ -7,6 +7,8 @@ using Infra.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+const string _corspolicy = "AllowAllOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -32,6 +34,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(_corspolicy,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 var app = builder.Build();
 
 
@@ -49,6 +62,7 @@ using (var scope = app.Services.CreateScope())
 //}
 
 app.UseHttpsRedirection();
+app.UseCors(_corspolicy); 
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
